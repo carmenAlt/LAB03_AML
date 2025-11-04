@@ -4,6 +4,33 @@ from torch import nn, optim
 from utils.download_dataset import download_and_extract_dataset
 from dataset.dataset import prepare_data
 
+def evaluate():
+    print("🚀 Starting evaluation script...")
+    device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+    print(f"📦 Device in use: {device}")
+
+    # 1️⃣ Carica il dataset
+    print("⬇️ Downloading / checking dataset...")
+    data_path = download_and_extract_dataset()
+    print(f"📁 Dataset ready at: {data_path}")
+
+    _, val_loader, num_classes = prepare_data(data_dir=data_path)
+    print(f"✅ Validation set loaded with {num_classes} classes")
+
+    # 2️⃣ Carica il modello addestrato
+    print("🧠 Loading trained model...")
+    model = CustomNet(num_classes=num_classes).to(device)
+    model.load_state_dict(torch.load("model.pth", map_location=device))
+    model.eval()
+    print("✅ Model loaded successfully!")
+
+    criterion = nn.CrossEntropyLoss()
+
+    # 3️⃣ Esegui validazione
+    print("🔍 Running evaluation...")
+    validate(model, val_loader, criterion, device)
+    print("🏁 Evaluation completed successfully!")
+    
 def validate(model, val_loader, criterion, device):
     """
     Esegue la validazione del modello su un DataLoader.
@@ -31,29 +58,3 @@ def validate(model, val_loader, criterion, device):
     print(f"🧪 Validation Loss: {val_loss:.4f} | Accuracy: {val_accuracy:.2f}%")
     return val_loss, val_accuracy
 
-def evaluate():
-    print("🚀 Starting evaluation script...")
-    device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-    print(f"📦 Device in use: {device}")
-
-    # 1️⃣ Carica il dataset
-    print("⬇️ Downloading / checking dataset...")
-    data_path = download_and_extract_dataset()
-    print(f"📁 Dataset ready at: {data_path}")
-
-    _, val_loader, num_classes = prepare_data(data_dir=data_path)
-    print(f"✅ Validation set loaded with {num_classes} classes")
-
-    # 2️⃣ Carica il modello addestrato
-    print("🧠 Loading trained model...")
-    model = CustomNet(num_classes=num_classes).to(device)
-    model.load_state_dict(torch.load("model.pth", map_location=device))
-    model.eval()
-    print("✅ Model loaded successfully!")
-
-    criterion = nn.CrossEntropyLoss()
-
-    # 3️⃣ Esegui validazione
-    print("🔍 Running evaluation...")
-    validate(model, val_loader, criterion, device)
-    print("🏁 Evaluation completed successfully!")
