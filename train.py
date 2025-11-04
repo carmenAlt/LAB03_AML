@@ -37,7 +37,7 @@ def train(epoch, model, train_loader, criterion, optimizer, device):
 
     return train_loss, train_accuracy
 
-def main():
+def execute():
     print("🚀 Starting training script...")
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
     print(f"📦 Device in use: {device}")
