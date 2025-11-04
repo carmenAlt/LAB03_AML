@@ -7,36 +7,6 @@ from eval import validate
 from utils.download_dataset import download_and_extract_dataset
 
 
-
-def train(epoch, model, train_loader, criterion, optimizer, device):
-    """
-    Esegue un'epoca di addestramento.
-    """
-    model.train()
-    running_loss = 0.0
-    correct = 0
-    total = 0
-
-    for batch_idx, (inputs, targets) in enumerate(tqdm(train_loader, desc=f"Epoch {epoch}")):
-        inputs, targets = inputs.to(device), targets.to(device)
-
-        optimizer.zero_grad()
-        outputs = model(inputs)
-        loss = criterion(outputs, targets)
-        loss.backward()
-        optimizer.step()
-
-        running_loss += loss.item()
-        _, predicted = outputs.max(1)
-        total += targets.size(0)
-        correct += predicted.eq(targets).sum().item()
-
-    train_loss = running_loss / len(train_loader)
-    train_accuracy = 100. * correct / total
-    print(f"✅ Train Epoch: {epoch} | Loss: {train_loss:.4f} | Accuracy: {train_accuracy:.2f}%")
-
-    return train_loss, train_accuracy
-
 def execute():
     print("🚀 Starting training script...")
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
@@ -68,3 +38,33 @@ def execute():
     torch.save(model.state_dict(), "model.pth")
     print("💾 Model saved as model.pth ✅")
     print("🏁 Training completed successfully!")
+
+def train(epoch, model, train_loader, criterion, optimizer, device):
+    """
+    Esegue un'epoca di addestramento.
+    """
+    model.train()
+    running_loss = 0.0
+    correct = 0
+    total = 0
+
+    for batch_idx, (inputs, targets) in enumerate(tqdm(train_loader, desc=f"Epoch {epoch}")):
+        inputs, targets = inputs.to(device), targets.to(device)
+
+        optimizer.zero_grad()
+        outputs = model(inputs)
+        loss = criterion(outputs, targets)
+        loss.backward()
+        optimizer.step()
+
+        running_loss += loss.item()
+        _, predicted = outputs.max(1)
+        total += targets.size(0)
+        correct += predicted.eq(targets).sum().item()
+
+    train_loss = running_loss / len(train_loader)
+    train_accuracy = 100. * correct / total
+    print(f"✅ Train Epoch: {epoch} | Loss: {train_loss:.4f} | Accuracy: {train_accuracy:.2f}%")
+
+    return train_loss, train_accuracy
+
