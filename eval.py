@@ -1,6 +1,8 @@
 import torch
 from models.model import CustomNet
 from torch import nn, optim
+from utils.download_dataset import download_and_extract_dataset
+from dataset.dataset import prepare_data
 
 def validate(model, val_loader, criterion, device):
     """
@@ -29,7 +31,7 @@ def validate(model, val_loader, criterion, device):
     print(f"🧪 Validation Loss: {val_loss:.4f} | Accuracy: {val_accuracy:.2f}%")
     return val_loss, val_accuracy
 
-if __name__ == "__main__":
+def evaluate():
     print("🚀 Starting evaluation script...")
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
     print(f"📦 Device in use: {device}")
