@@ -19,8 +19,8 @@ def evaluate():
 
     # 2️⃣ Carica il modello addestrato
     print("🧠 Loading trained model...")
-    model = CustomNet(num_classes=num_classes).to(device)
-    model.load_state_dict(torch.load("model.pth", map_location=device))
+    model = CustomNet().to(device)
+    model.load_state_dict(torch.load("best_model.pth", map_location=device))
     model.eval()
     print("✅ Model loaded successfully!")
 
@@ -30,7 +30,7 @@ def evaluate():
     print("🔍 Running evaluation...")
     validate(model, val_loader, criterion, device)
     print("🏁 Evaluation completed successfully!")
-    
+
 def validate(model, val_loader, criterion, device):
     """
     Esegue la validazione del modello su un DataLoader.

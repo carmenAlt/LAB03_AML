@@ -32,11 +32,21 @@ def execute():
     optimizer = optim.Adam(model.parameters(), lr=0.001)
 
     print("🎯 Starting training loop...")
-    for epoch in range(1, 4):  # 3 epoche giusto per test
-        train(epoch, model, train_loader, criterion, optimizer, device)
+    best_val_accuracy = 0.0  # inizializza prima del ciclo epoche
 
-    torch.save(model.state_dict(), "model.pth")
-    print("💾 Model saved as model.pth ✅")
+    for epoch in range(1, 4):  # numero di epoche
+        train_loss, train_acc = train(epoch, model, train_loader, criterion, optimizer, device)
+    
+    # validazione ad ogni epoca
+        val_loss, val_acc = validate(model, val_loader, criterion, device)
+
+    # salva il modello se è il migliore finora
+        if val_acc > best_val_accuracy:
+            best_val_accuracy = val_acc
+            torch.save(model.state_dict(), "best_model.pth")
+            print(f"💾 New best model saved with accuracy: {val_acc:.2f}%")
+
+    print("💾 Model saved as best_model.pth ✅")
     print("🏁 Training completed successfully!")
 
 def train(epoch, model, train_loader, criterion, optimizer, device):
