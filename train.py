@@ -25,7 +25,7 @@ def execute():
 
     # 3️⃣ Inizializza modello, loss e ottimizzatore
     print("🧠 Initializing model...")
-    model = CustomNet(num_classes=num_classes).to(device)
+    model = CustomNet().to(device)  # <--- rimosso num_classes
     print(model)
 
     criterion = nn.CrossEntropyLoss()
