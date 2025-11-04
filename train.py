@@ -2,6 +2,10 @@ import torch
 from tqdm import tqdm
 from models.model import CustomNet
 from torch import nn, optim
+from dataset.dataset import prepare_data
+from eval import validate
+from utils.download_dataset import download_and_extract_dataset
+
 
 
 def train(epoch, model, train_loader, criterion, optimizer, device):
@@ -33,7 +37,7 @@ def train(epoch, model, train_loader, criterion, optimizer, device):
 
     return train_loss, train_accuracy
 
-if __name__ == "__main__":
+def main():
     print("🚀 Starting training script...")
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
     print(f"📦 Device in use: {device}")
